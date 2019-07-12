@@ -11,7 +11,7 @@ class Trial:
 	def report(self, win, mouse=None, exp=None, block_type=None, block_id=None, trial_number=None):
 		while True:
 			self.clock.draw_circle(win)
-			self.clock.draw_ticks(win, tick_length)
+			self.clock.draw_ticks(win)
 
 
 			mouse.setVisible(visible=1)
