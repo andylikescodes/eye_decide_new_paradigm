@@ -5,31 +5,49 @@ import trial as t
 from config import *
 from psychopy.iohub import launchHubServer
 from psychopy.data import ExperimentHandler
+from psychopy import gui
 
-if DUMMY == True:
-    iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
-                    {'name': 'tracker',
-                     'model_name': 'EYELINK 1000 DESKTOP',
-                     'runtime_settings': {'sampling_rate': 500,
-                                          'track_eyes': 'RIGHT'},
-                     'enable_interface_without_connection': False}
-                    }
+# Get user input for saving the data
+
+myDlg = gui.Dlg(title="Experiment")
+myDlg.addText('Subject info')
+myDlg.addField('Name:')
+myDlg.addField('Age:', 21)
+myDlg.addText('Experiment Info')
+myDlg.addField('Grating Ori:',45)
+myDlg.addField('Group:', choices=["Test", "Control"])
+ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
+if myDlg.OK:  # or if ok_data is not None
+    print(ok_data)
 else:
-    iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
-                {'name': 'tracker',
-                 'model_name': 'EYELINK 1000 DESKTOP',
-                 'runtime_settings': {'sampling_rate': 500,
-                                      'track_eyes': 'RIGHT'}
-                }
-                }
+    print('user cancelled')
 
-io = launchHubServer(**iohub_config)
-
-# Get the eye tracker device.
-tracker = io.devices.tracker
-
-# run eyetracker calibration
-r = tracker.runSetupProcedure()
+#if DUMMY == True:
+#    iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
+#                    {'name': 'tracker',
+#                     'model_name': 'EYELINK 1000 DESKTOP',
+#                     'runtime_settings': {'sampling_rate': 500,
+#                                          'track_eyes': 'RIGHT'},
+#                     'enable_interface_without_connection': True,
+#                     'simulation_mode': True}
+#                    }
+#else:
+#    iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
+#                {'name': 'tracker',
+#                 'model_name': 'EYELINK 1000 DESKTOP',
+#                 'runtime_settings': {'sampling_rate': 500,
+#                                      'track_eyes': 'RIGHT'},
+#                 'default_native_data_file_name': str(ok_data[0])
+#                }
+#                }
+#
+#io = launchHubServer(**iohub_config)
+#
+## Get the eye tracker device.
+#tracker = io.devices.tracker
+#
+## run eyetracker calibration
+#r = tracker.runSetupProcedure()
 
 # Create experiment handler to record user inputs
 exp = ExperimentHandler(dataFileName='test')
@@ -64,7 +82,11 @@ win.flip()#to show our newly drawn 'stimuli'
 event.waitKeys()
 
 test_trial = t.Trial(experiment_type='w')
-test_trial.run(win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
+
+#test_trial.run(win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
+
+# Test the program without the eye-tracker
+test_trial.run(win, mouse, event, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
 
 exp.saveAsWideText(fileName='test.csv', delim=',')
 

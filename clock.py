@@ -42,57 +42,6 @@ class Clock:
 		if draw_now == True:
 			win.flip()
 
-		# if report == True:
-		# 	while True:
-
-		# 		self.draw_circle(win)
-		# 		self.draw_ticks(win, tick_length)
-
-
-		# 		mouse.setVisible(visible=1)
-		# 		print(mouse.getPos())
-
-		# 		# dot_x, dot_y = self.cal_pos(self.radius, clock_where)
-		# 		dot_x, dot_y = mouse.getPos()
-		# 		circle_ball = visual.Circle(win, radius=0.2, fillColor='white', pos=(dot_x/2, dot_y/2), 
-		# 			edges=self.edges, lineWidth=3, units='deg')
-		# 		circle_ball.draw()
-		# 		win.flip()
-		# 		buttons = mouse.getPressed()
-		# 		if buttons[0] == 1:
-		# 			self.draw_circle(win)
-		# 			self.draw_ticks(win, tick_length)
-		# 			xx = dot_x
-		# 			yy = dot_y
-		# 			r = np.sqrt(xx**2 + yy**2)
-		# 			theta = math.acos(xx/r)
-
-		# 			if yy < 0:
-		# 				theta = -theta
-					
-		# 			dot_x = self.radius * math.cos(theta)
-		# 			dot_y = self.radius * math.sin(theta)
-		# 			circle = visual.Circle(win, radius=0.2, fillColor='white', pos=(dot_x, dot_y), 
-		# 			edges=self.edges, lineWidth=3)
-		# 			circle.draw()
-		# 			win.flip()
-		# 			keys = event.waitKeys(keyList=['space', 'escape'])
-		# 			if keys[0] == 'escape':
-		# 				continue
-
-		# 			if keys[0] == 'space':
-		# 				break
-
-		# 	exp.addData('block_type', block_type)
-		# 	exp.addData('block_id', block_id)
-		# 	exp.addData('trial_number', trial_number)
-		# 	exp.addData('x', dot_x)
-		# 	exp.addData('y', dot_y)
-		# 	exp.nextEntry()
-		# 	core.wait(0.5)
-				
-
-
 	def draw_moving_clock(self, win, event, tracker=None):
 		'''
 			define termination condition (2 rotations)
@@ -113,7 +62,7 @@ class Clock:
 			clock_step = 2*math.pi/240 # TODO: Need to figure out how to set the time of the clock
 			while clock_where >= clock_end:
 
-				self.draw_plain_clock(win)
+				self.draw_plain_clock(win, draw_now=False)
 				dot_x = self.radius * math.cos(clock_where)
 				dot_y = self.radius * math.sin(clock_where)
 				circle = visual.Circle(win, radius=0.2, fillColor='white', pos=(dot_x, dot_y), 
@@ -122,11 +71,14 @@ class Clock:
 
 				clock_where = clock_where - clock_step
 				win.flip()
-
-			if (self.user_input == True) & (i == 1):
+				pressed = -1
+			if (self.user_input == True) & (i == 1) & (pressed==-1):
 				key = event.getKeys(keyList=['space'])
 				if key[0] == 'space':
-					tracker.sendMessage('M-TIME RECORDED.')
+					#tracker.sendMessage('M-TIME RECORDED.')
+					pressed = 1
+					continue
+
 
 
 

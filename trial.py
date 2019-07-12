@@ -20,13 +20,13 @@ class Trial:
 			# dot_x, dot_y = self.cal_pos(self.radius, clock_where)
 			dot_x, dot_y = mouse.getPos()
 			circle_ball = visual.Circle(win, radius=0.2, fillColor='white', pos=(dot_x/2, dot_y/2), 
-				edges=self.edges, lineWidth=3, units='deg')
+				edges=self.clock.edges, lineWidth=3, units='deg')
 			circle_ball.draw()
 			win.flip()
 			buttons = mouse.getPressed()
 			if buttons[0] == 1:
 				self.clock.draw_circle(win)
-				self.clock.draw_ticks(win, tick_length)
+				self.clock.draw_ticks(win)
 				xx = dot_x
 				yy = dot_y
 				r = np.sqrt(xx**2 + yy**2)
@@ -35,10 +35,10 @@ class Trial:
 				if yy < 0:
 					theta = -theta
 				
-				dot_x = self.radius * math.cos(theta)
-				dot_y = self.radius * math.sin(theta)
+				dot_x = self.clock.radius * math.cos(theta)
+				dot_y = self.clock.radius * math.sin(theta)
 				circle = visual.Circle(win, radius=0.2, fillColor='white', pos=(dot_x, dot_y), 
-				edges=self.edges, lineWidth=3)
+				edges=self.clock.edges, lineWidth=3)
 				circle.draw()
 				win.flip()
 				keys = event.waitKeys(keyList=['space', 'escape'])
@@ -56,8 +56,9 @@ class Trial:
 		exp.nextEntry()
 		core.wait(0.5)
 
-	def run(self, win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None):
-
+	#def run(self, win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None):
+	# Test without eyetracker
+	def run(self, win, mouse, event, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None):
 		if self.type =='w':
 		# Trial discription
 			text = visual.TextStim(win, pos=[0,0], text="Text discription for w task")
@@ -72,7 +73,10 @@ class Trial:
 			core.wait(1)
 
 			clock = c.Clock(user_input=True, radius=8)
-			clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+
+			# Test without eyetracker
+			clock.draw_moving_clock(win, event)
 
 			# Instruction to ask for user input
 			text = visual.TextStim(win, pos=[0,0], text="Click on the clock when you feel the urge to move")
