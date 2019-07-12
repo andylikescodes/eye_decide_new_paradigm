@@ -1,5 +1,7 @@
 import clock as c
 from psychopy import core, visual, gui, data, event
+import numpy as np
+import math, random
 
 # 
 
@@ -15,7 +17,6 @@ class Trial:
 
 
 			mouse.setVisible(visible=1)
-			print(mouse.getPos())
 
 			# dot_x, dot_y = self.cal_pos(self.radius, clock_where)
 			dot_x, dot_y = mouse.getPos()

@@ -74,10 +74,11 @@ class Clock:
 				pressed = -1
 			if (self.user_input == True) & (i == 1) & (pressed==-1):
 				key = event.getKeys(keyList=['space'])
-				if key[0] == 'space':
-					#tracker.sendMessage('M-TIME RECORDED.')
-					pressed = 1
-					continue
+				if key:
+					if key[0] == 'space':
+						#tracker.sendMessage('M-TIME RECORDED.')
+						pressed = 1
+						continue
 
 
 

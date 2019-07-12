@@ -86,7 +86,7 @@ test_trial = t.Trial(experiment_type='w')
 #test_trial.run(win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
 
 # Test the program without the eye-tracker
-test_trial.run(win, mouse, event, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
+test_trial.run(win, mouse, event, report=True, exp=exp, block_type='w', block_id=1, trial_number=1)
 
 exp.saveAsWideText(fileName='test.csv', delim=',')
 
