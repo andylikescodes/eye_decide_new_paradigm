@@ -82,9 +82,6 @@ practice_block_s = block.Block(experiment_type='i', block_id=5, n_trials=1, repo
 n_blocks_each_type = ok_data[1]
 n_trials_each_block = ok_data[2]
 
-
-
-
 #Create no report blcok at the end
 w_block_no_report_end = block.Block(experiment_type='w', block_id=10, n_trials=2, report=False, is_practice=False)
 
