@@ -82,17 +82,21 @@ practice_block_s = block.Block(experiment_type='i', block_id=5, n_trials=1, repo
 n_blocks_each_type = ok_data[1]
 n_trials_each_block = ok_data[2]
 
-for i in range(n_blocks_each_type):
-    w_block = block.Block(experiment_type='w', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
-    m_block = block.Block(experiment_type='m', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
-    i_block = block.Block(experiment_type='i', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
-    s_block = block.Block(experiment_type='s', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
+
+
 
 #Create no report blcok at the end
 w_block_no_report_end = block.Block(experiment_type='w', block_id=10, n_trials=2, report=False, is_practice=False)
 
+# Create experiment blocks
+experiment_block_list = []
+for i in range(n_blocks_each_type):
+    experiment_block_list.append(block.Block(experiment_type='w', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='m', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='i', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='s', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
+
 # randomly shuffle the experimant blocks
-experiment_block_list = [w_block, m_block, i_block, s_block]
 random.shuffle(experiment_block_list)
 
 practice_block_list = [practice_block_w, practice_block_m, practice_block_s, practice_block_i]
