@@ -9,11 +9,10 @@ from psychopy.data import ExperimentHandler
 
 myDlg = gui.Dlg(title="Experiment")
 myDlg.addText('Subject info')
-myDlg.addField('Name:')
-myDlg.addField('Age:', 21)
+myDlg.addField('subject_id:', 000)
 myDlg.addText('Experiment Info')
-myDlg.addField('Grating Ori:',45)
-myDlg.addField('Group:', choices=["Test", "Control"])
+myDlg.addField('number of blocks for each experiment type:', 2)
+myDlg.addField('number of trials for each block:', 2)
 ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
 if myDlg.OK:  # or if ok_data is not None
     print(ok_data)
@@ -48,7 +47,7 @@ else:
 #r = tracker.runSetupProcedure()
 
 # Create experiment handler (data input) to record user inputs
-exp = ExperimentHandler(dataFileName='test')
+exp = ExperimentHandler()
 
 # Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
@@ -80,10 +79,14 @@ practice_block_i = block.Block(experiment_type='i', block_id=4, n_trials=1, repo
 practice_block_s = block.Block(experiment_type='i', block_id=5, n_trials=1, report=True, is_practice=True)
 
 # Create actual experiment blocks # you can create these blocks using a for loop
-w_block = block.Block(experiment_type='w', block_id=6, n_trials=2, report=True, is_practice=False)
-m_block = block.Block(experiment_type='m', block_id=7, n_trials=2, report=True, is_practice=False)
-i_block = block.Block(experiment_type='i', block_id=8, n_trials=2, report=True, is_practice=False)
-s_block = block.Block(experiment_type='s', block_id=9, n_trials=2, report=True, is_practice=False)
+n_blocks_each_type = ok_data[1]
+n_trials_each_block = ok_data[2]
+
+for i in range(n_blocks_each_type):
+    w_block = block.Block(experiment_type='w', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
+    m_block = block.Block(experiment_type='m', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
+    i_block = block.Block(experiment_type='i', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
+    s_block = block.Block(experiment_type='s', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False)
 
 #Create no report blcok at the end
 w_block_no_report_end = block.Block(experiment_type='w', block_id=10, n_trials=2, report=False, is_practice=False)
@@ -107,7 +110,8 @@ for block in experiment_block_list:
 w_block_no_report_end.run(win, mouse, event, exp=exp) # End with a no report w block
 
 # Save the output files
-exp.saveAsWideText(fileName='test.csv', delim=',')
+filename = ok_data[0]
+exp.saveAsWideText(fileName=str(filename) + '.csv', delim=',')
 
 # Display experiment end txt
 message1 = visual.TextStim(win, pos=[0,+3], text='Thank you for your participation.')
