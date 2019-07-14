@@ -1,11 +1,9 @@
 from psychopy import core, visual, gui, data, event
 import numpy, random
-import clock as c
-import trial as t
+import block
 from config import *
 from psychopy.iohub import launchHubServer
 from psychopy.data import ExperimentHandler
-from psychopy import gui
 
 # Get user input for saving the data
 
@@ -49,10 +47,10 @@ else:
 ## run eyetracker calibration
 #r = tracker.runSetupProcedure()
 
-# Create experiment handler to record user inputs
+# Create experiment handler (data input) to record user inputs
 exp = ExperimentHandler(dataFileName='test')
 
-# create window and stimuli
+# Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
                     monitor='testMonitor', units='deg')
 
@@ -60,35 +58,66 @@ win = visual.Window([1920,1080],allowGUI=True,
 mouse = event.Mouse(win=win)
 mouse.setVisible(visible=0)
 
-# foil = visual.GratingStim(win, sf=1, size=4, mask='gauss',
-#                           ori=expInfo['refOrientation'])
-# target = visual.GratingStim(win, sf=1, size=4, mask='gauss',
-#                             ori=expInfo['refOrientation'])
-fixation = visual.GratingStim(win, color=-1, colorSpace='rgb',
+# display instructions to start the experiment
+fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
                               tex=None, mask='circle', size=0.2)
-# and some handy clocks to keep track of time
-globalClock = core.Clock()
-trialClock = core.Clock()
-
-# display instructions and wait
-message1 = visual.TextStim(win, pos=[0,+3],text='Hit a key when ready.')
-message2 = visual.TextStim(win, pos=[0,-3],
-    text="The experiment is about to start!")
+message1 = visual.TextStim(win, pos=[0,+3], text='Hit a key when ready.')
+message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is about to start!")
 message1.draw()
 message2.draw()
 fixation.draw()
-win.flip()#to show our newly drawn 'stimuli'
+win.flip()
 #pause until there's a keypress
 event.waitKeys()
 
-test_trial = t.Trial(experiment_type='w')
+#Create no report blcok
+w_block_no_report_start = block.Block(experiment_type='w', block_id=1, n_trials=2, report=False, is_practice=False)
 
-#test_trial.run(win, mouse, event, tracker, report=True, exp=None, block_type=None, block_id=None, trial_number=None)
+#Create practice blocks
+practice_block_w = block.Block(experiment_type='w', block_id=2, n_trials=1, report=True, is_practice=True)
+practice_block_m = block.Block(experiment_type='m', block_id=3, n_trials=1, report=True, is_practice=True)
+practice_block_i = block.Block(experiment_type='i', block_id=4, n_trials=1, report=True, is_practice=True)
+practice_block_s = block.Block(experiment_type='i', block_id=5, n_trials=1, report=True, is_practice=True)
 
-# Test the program without the eye-tracker
-test_trial.run(win, mouse, event, report=True, exp=exp, block_type='w', block_id=1, trial_number=1)
+# Create actual experiment blocks # you can create these blocks using a for loop
+w_block = block.Block(experiment_type='w', block_id=6, n_trials=2, report=True, is_practice=False)
+m_block = block.Block(experiment_type='m', block_id=7, n_trials=2, report=True, is_practice=False)
+i_block = block.Block(experiment_type='i', block_id=8, n_trials=2, report=True, is_practice=False)
+s_block = block.Block(experiment_type='s', block_id=9, n_trials=2, report=True, is_practice=False)
 
+#Create no report blcok at the end
+w_block_no_report_end = block.Block(experiment_type='w', block_id=10, n_trials=2, report=False, is_practice=False)
+
+# randomly shuffle the experimant blocks
+experiment_block_list = [w_block, m_block, i_block, s_block]
+random.shuffle(experiment_block_list)
+
+practice_block_list = [practice_block_w, practice_block_m, practice_block_s, practice_block_i]
+random.shuffle(practice_block_list)
+
+# block sequence
+w_block_no_report_start.run(win, mouse, event, exp=exp) # Start with a no report w block
+
+for block in practice_block_list:
+    block.run(win, mouse, event, exp=exp) # Run practice blocks
+
+for block in experiment_block_list:
+    block.run(win, mouse, event, exp=exp) # Run experiment blocks
+
+w_block_no_report_end.run(win, mouse, event, exp=exp) # End with a no report w block
+
+# Save the output files
 exp.saveAsWideText(fileName='test.csv', delim=',')
 
+# Display experiment end txt
+message1 = visual.TextStim(win, pos=[0,+3], text='Thank you for your participation.')
+message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is ended, press any key to exit the experiment!")
+message1.draw()
+message2.draw()
+win.flip()
+#pause until there's a keypress
+event.waitKeys()
+
+# Window close and program termination
 win.close()
 core.quit()
