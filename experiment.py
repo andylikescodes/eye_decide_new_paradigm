@@ -28,7 +28,7 @@ n_practice_each_block = ok_data[2]
 n_blocks_each_type = ok_data[3]
 n_trials_per_block = ok_data[4]
 
-
+edf_filename = './'+str(subject_id)
 
 iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
            {'name': 'tracker',
@@ -90,10 +90,10 @@ w_block_no_report_end = block.Block(experiment_type='w', block_id=2, n_trials=n_
 # Create experiment blocks
 experiment_block_list = []
 for i in range(n_blocks_each_type):
-    experiment_block_list.append(block.Block(experiment_type='w', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
-    experiment_block_list.append(block.Block(experiment_type='m', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
-    experiment_block_list.append(block.Block(experiment_type='i', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
-    experiment_block_list.append(block.Block(experiment_type='s', block_id=i+1, n_trials=n_trials_each_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='w', block_id=i+1, n_trials=n_trials_per_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='m', block_id=i+1, n_trials=n_trials_per_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='i', block_id=i+1, n_trials=n_trials_per_block, report=True, is_practice=False))
+    experiment_block_list.append(block.Block(experiment_type='s', block_id=i+1, n_trials=n_trials_per_block, report=True, is_practice=False))
 
 # randomly shuffle the experimant blocks
 random.shuffle(experiment_block_list)

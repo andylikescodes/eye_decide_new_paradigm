@@ -7,7 +7,7 @@ import numpy as np
 
 class Clock:
 	def __init__(self, radius, tick_length=0.5, user_input=True, 
-				edges=64, clock_stopping_range=[math.pi/4, math.pi/2]):
+				edges=64, clock_stopping_range=[math.pi/2, math.pi]):
 		self.radius = radius
 		self.edges = edges
 		self.user_input = user_input
@@ -63,6 +63,7 @@ class Clock:
 		circle, fixation, ticks = self.draw_plain_clock(win)
 		ball = visual.Circle(win, radius=0.2, fillColor='white', pos=[0,0], 
 					edges=self.edges, lineWidth=3)
+		speaker = Sound(value="F", secs=0.2, stereo=False)
 
 		pressed = -1
 		sound_played = -1
@@ -99,7 +100,6 @@ class Clock:
 					if (beep_rotation == rotations):
 						where_beep_clock = math.pi/2 - beep_time_this_clock/2.5 * 2 * math.pi
 						if (where_beep_clock >= clock_where):
-							speaker = Sound(value="F", secs=0.2, stereo=False)
 							speaker.play()
 							tracker.sendMessage('EVENT-TIME RECORDED - SOUND PLAYED.')
 							event_time = beep_time[0]
