@@ -97,6 +97,7 @@ class Trial:
 
 	def run(self, win, mouse, event, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
 		# MSG eye-tracker: Trial starts
+		tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
 		event_time = 0
 		if self.type =='w':
 			w_text = "Trial#{}, Text discription for w task, click space bar to start".format(str(trial_number)) # TODO: Change this later for stuff
@@ -174,4 +175,5 @@ class Trial:
 				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
 		## MSG eye-tracker: trial ends
+		tracker.sendMessage('TRIAL {} ENDS'.format(str(trial_number)))
 		return event_time
