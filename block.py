@@ -1,5 +1,7 @@
 import trial
+from config import *
 from psychopy import core, visual, gui, data, event
+import numpy as np
 
 # Block class
 class Block:
@@ -9,22 +11,33 @@ class Block:
 		self.report = report
 		self.block_id = block_id
 		self.is_practice = is_practice
+		self.event_time_dist = []
 
 	def draw_text(self, win, text, pos=[0,0], draw_now=True):
-		text = visual.TextStim(win, pos=pos, text=text)
+		text = visual.TextStim(win, pos=pos, text=text, wrapWidth=30, alignHoriz='center')
 		text.draw()
 		if draw_now == True:
 			win.flip()
 
-	def run(self, win, mouse, event, tracker=None, exp=None):
-
-		block_txt = 'This block has {} trials, the type of experiment is {}, press space bar to start.'.format(str(self.n_trials), str(self.type))
+	def run(self, win, mouse, event, tracker=None, exp=None, beep_dist=None):
+		if self.report == False:
+			block_txt = NO_REPORT_INSTR
+		if self.type == 'w':
+			block_txt = W_TIME_INSTR
+		if self.type == 'm':
+			block_txt = M_TIME_INSTR
+		if self.type == 's':
+			block_txt = S_TIME_INSTR
+		if self.type == 'i':
+			block_txt = I_TIME_INSTR
 
 		self.draw_text(win, block_txt)
 		event.waitKeys(keyList=['space'])
 
 		new_trial = trial.Trial(self.type)
+		# MSG - block starts
 		for i in range(self.n_trials):
-			new_trial.run(win, mouse, event, report=self.report, exp=exp, block_type=self.type, 
-							block_id=self.block_id, trial_number=i+1, is_practice=self.is_practice)
-
+			event_time = new_trial.run(win, mouse, event, report=self.report, exp=exp, block_type=self.type, 
+							block_id=self.block_id, trial_number=i+1, is_practice=self.is_practice, beep_dist=beep_dist)
+			self.event_time_dist.append(event_time)
+		# MSG - block ends

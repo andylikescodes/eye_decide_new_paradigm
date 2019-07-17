@@ -1,4 +1,4 @@
-from psychopy import core, visual, gui, data, event
+from psychopy import core, visual, gui, data, event, logging
 import numpy, random
 import block
 from config import *
@@ -51,7 +51,12 @@ exp = ExperimentHandler()
 
 # Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
-                    monitor='testMonitor', units='deg')
+                    monitor='testMonitor', units='deg', fullscr=True)
+
+# win = visual.Window([800,600],allowGUI=True,
+#                     monitor='testMonitor', units='deg')
+win.recordFrameIntervals = True
+win.refreshThreshold = 1/60 + 0.004
 
 # Create mouse
 mouse = event.Mouse(win=win)
@@ -75,7 +80,7 @@ w_block_no_report_start = block.Block(experiment_type='w', block_id=1, n_trials=
 #Create practice blocks
 practice_block_w = block.Block(experiment_type='w', block_id=2, n_trials=1, report=True, is_practice=True)
 practice_block_m = block.Block(experiment_type='m', block_id=3, n_trials=1, report=True, is_practice=True)
-practice_block_i = block.Block(experiment_type='i', block_id=4, n_trials=1, report=True, is_practice=True)
+practice_block_i = block.Block(experiment_type='s', block_id=4, n_trials=1, report=True, is_practice=True)
 practice_block_s = block.Block(experiment_type='i', block_id=5, n_trials=1, report=True, is_practice=True)
 
 # Create actual experiment blocks # you can create these blocks using a for loop
@@ -102,11 +107,13 @@ random.shuffle(practice_block_list)
 # block sequence
 w_block_no_report_start.run(win, mouse, event, exp=exp) # Start with a no report w block
 
+s_beep_dist = w_block_no_report_start.event_time_dist
+
 for block in practice_block_list:
-    block.run(win, mouse, event, exp=exp) # Run practice blocks
+    block.run(win, mouse, event, exp=exp, beep_dist=s_beep_dist) # Run practice blocks
 
 for block in experiment_block_list:
-    block.run(win, mouse, event, exp=exp) # Run experiment blocks
+    block.run(win, mouse, event, exp=exp, beep_dist=s_beep_dist) # Run experiment blocks
 
 w_block_no_report_end.run(win, mouse, event, exp=exp) # End with a no report w block
 
