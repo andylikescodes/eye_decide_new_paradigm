@@ -65,8 +65,8 @@ mouse.setVisible(visible=0)
 # display instructions to start the experiment
 fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
                               tex=None, mask='circle', size=0.2)
-message1 = visual.TextStim(win, pos=[0,+3], text='Hit a key when ready.')
-message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is about to start!")
+message1 = visual.TextStim(win, pos=[0,+3], text=GENERAL_INSTR)
+message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is about to start! Hit a key when ready.")
 message1.draw()
 message2.draw()
 fixation.draw()
