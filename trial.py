@@ -40,7 +40,7 @@ class Trial:
 
 			dot_x, dot_y = mouse.getPos()
 			
-			circle_ball.pos = [dot_x/2, dot_y/2]
+			circle_ball.pos = [dot_x, dot_y]
 			circle_ball.draw()
 			win.flip()
 			buttons = mouse.getPressed()
@@ -111,7 +111,7 @@ class Trial:
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
 			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
+			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 			# Report 
 			if report == True:
 				report_text = "Click on the clock when you feel the urge to move, press esc to reset" # TODO: Change the txt
@@ -133,7 +133,7 @@ class Trial:
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
 			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
+			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
 			# Report 
 			if report == True:
@@ -157,7 +157,7 @@ class Trial:
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
 			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
+			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
 			# Report 
 			if report == True:
@@ -179,7 +179,7 @@ class Trial:
 			self.draw_text(win, s_text)
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
-			event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist)
+			event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist, tracker=tracker)
 
 			# Report 
 			if report == True:
