@@ -114,7 +114,7 @@ class Trial:
 			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset" # TODO: Change the txt
+				report_text = W_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -137,7 +137,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset" # TODO: Change the txt
+				report_text = M_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -161,7 +161,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset"
+				report_text = I_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -183,7 +183,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock where you feel the sound was played, press esc to reset"
+				report_text = S_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
