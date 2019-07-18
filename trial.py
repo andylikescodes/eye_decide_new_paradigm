@@ -2,6 +2,8 @@ import clock as c
 from psychopy import core, visual, gui, data, event
 import numpy as np
 import math, random
+from config import *
+
 
 # Trial class
 class Trial:
@@ -103,7 +105,7 @@ class Trial:
 			Trial#{}
 
 			{}
-			'''.format(str(trial_number), W_TIME_INSTR) # TODO: Change this later for stuff
+			'''.format(str(trial_number), W_TIME_PER_TRIAL_INSTR) # TODO: Change this later for stuff
 			# Trial discription
 			self.draw_text(win, w_text)
 			event.waitKeys(keyList=['space'])
@@ -112,7 +114,7 @@ class Trial:
 			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset" # TODO: Change the txt
+				report_text = W_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -126,7 +128,7 @@ class Trial:
 			Trial#{}
 
 			{}
-			'''.format(str(trial_number), M_TIME_INSTR)
+			'''.format(str(trial_number), M_TIME_PER_TRIAL_INSTR)
 			self.draw_text(win, m_text)
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
@@ -135,7 +137,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset" # TODO: Change the txt
+				report_text = M_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -149,7 +151,7 @@ class Trial:
 			Trial#{}
 
 			{}
-			'''.format(str(trial_number), I_TIME_INSTR)
+			'''.format(str(trial_number), I_TIME_PER_TRIAL_INSTR)
 			self.draw_text(win, i_text)
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
@@ -159,7 +161,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock when you feel the urge to move, press esc to reset"
+				report_text = I_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
@@ -173,7 +175,7 @@ class Trial:
 			Trial#{}
 
 			{}
-			'''.format(str(trial_number), S_TIME_INSTR)
+			'''.format(str(trial_number), S_TIME_PER_TRIAL_INSTR)
 			self.draw_text(win, s_text)
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
@@ -181,7 +183,7 @@ class Trial:
 
 			# Report 
 			if report == True:
-				report_text = "Click on the clock where you feel the sound was played, press esc to reset"
+				report_text = S_TIME_PER_REPORT_INSTR
 				# MSG - report starts
 				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
 							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
