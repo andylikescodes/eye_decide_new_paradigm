@@ -2,6 +2,7 @@ import clock as c
 from psychopy import core, visual, gui, data, event
 import numpy as np
 import math, random
+from config import *
 
 # Trial class
 class Trial:
@@ -100,7 +101,11 @@ class Trial:
 		tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
 		event_time = 0
 		if self.type =='w':
-			w_text = "Trial#{}, Text discription for w task, click space bar to start".format(str(trial_number)) # TODO: Change this later for stuff
+			w_text = '''
+			Trial#{}
+
+			{}
+			'''.format(str(trial_number), NO_REPORT_PER_TRIAL_INSTR) 
 			# Trial discription
 			self.draw_text(win, w_text)
 			event.waitKeys(keyList=['space'])
@@ -119,7 +124,11 @@ class Trial:
 
 		if self.type =='m':
 		# Trial discription
-			m_text = "Trial#{}, Text discription for m task, click space bar to start".format(str(trial_number))
+			m_text = '''
+			Trial#{}
+
+			{}
+			'''.format(str(trial_number), M_TIME_PER_TRIAL_INSTR) 
 			self.draw_text(win, m_text)
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
@@ -138,7 +147,11 @@ class Trial:
 
 		if self.type == 'i':
 			# Trial discription
-			i_text = "Trial#{}, Text discription for i task, click space bar to start".format(str(trial_number))
+			i_text = '''
+			Trial#{}
+
+			{}
+			'''.format(str(trial_number), I_TIME_PER_TRIAL_INSTR) 
 			self.draw_text(win, i_text)
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
@@ -158,7 +171,11 @@ class Trial:
 
 		if self.type == 's':
 			# Trial discription
-			s_text = "Trial#{}, Text discription for s task, click space bar to start".format(str(trial_number))
+			s_text = '''
+			Trial#{}
+
+			{}
+			'''.format(str(trial_number), S_TIME_PER_TRIAL_INSTR) 
 			self.draw_text(win, s_text)
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
