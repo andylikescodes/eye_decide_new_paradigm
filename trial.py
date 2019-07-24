@@ -6,7 +6,7 @@ from config import *
 
 # Trial class
 class Trial:
-	def __init__(self, experiment_type, clock_radius=4):
+	def __init__(self, experiment_type, clock_radius=2.5):
 		self.type = experiment_type
 		self.clock = c.Clock(radius=clock_radius)
 
