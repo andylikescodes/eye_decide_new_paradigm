@@ -56,12 +56,12 @@ exp = ExperimentHandler()
 # add global event key to terminate the program
 event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
 
-# Create window to show stimuli
+# # Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
-                    monitor='testMonitor', units='deg', fullscr=False)
+                    monitor='testMonitor', units='deg', fullscr=True)
 
 # win = visual.Window([800,600],allowGUI=True,
-#                     monitor='testMonitor', units='deg')
+#                     monitor='testMonitor', units='deg', fullscr=False)
 win.recordFrameIntervals = True
 win.refreshThreshold = 1/60 + 0.004
 
