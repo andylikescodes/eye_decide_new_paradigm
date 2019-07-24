@@ -68,6 +68,7 @@ class Clock:
 		sound_played = -1
 		key=[]
 		# MSG Eye-tracker - clock display
+		
 		while True:
 			rotations = rotations + 1
 			timer.add(2.5)
@@ -76,7 +77,9 @@ class Clock:
 			clock_end = 2 * math.pi
 			clock_where = math.pi/2
 			while True:
+				print('iter_starts:')
 				time_now = timer.getTime()
+				print(time_now)
 				if (pressed == -1) & (time_now >= 0):
 					break
 				if (pressed == 1) & (clock_where <= clock_end):
@@ -117,6 +120,10 @@ class Clock:
 							clock_end = clock_where - np.random.uniform(low=self.clock_stopping_range[0], high=self.clock_stopping_range[1])
 				elif (rotations <= 1):
 					event.clearEvents()
+
+				print('iter_ends:')
+				time_now = timer.getTime()
+				print(time_now)
 
 			if (pressed == 1) | (sound_played == 1):
 				break
