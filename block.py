@@ -20,8 +20,6 @@ class Block:
 			win.flip()
 
 	def run(self, win, mouse, event, tracker=None, exp=None, beep_dist=None):
-		if self.report == False:
-			block_txt = NO_REPORT_INSTR
 		if self.type == 'w':
 			block_txt = W_TIME_INSTR
 		if self.type == 'm':
@@ -30,6 +28,8 @@ class Block:
 			block_txt = S_TIME_INSTR
 		if self.type == 'i':
 			block_txt = I_TIME_INSTR
+		if self.report == False:
+			block_txt = NO_REPORT_INSTR
 
 		if self.is_practice == True:
 			block_txt = 'PRACTICE: ' + block_txt

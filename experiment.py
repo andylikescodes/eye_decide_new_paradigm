@@ -30,7 +30,6 @@ n_practice_each_block = ok_data[3]
 n_blocks_each_type = ok_data[4]
 n_trials_per_block = ok_data[5]
 
-
 edf_filename = './'+str(subject_id)
 
 iohub_config = {'eyetracker.hw.sr_research.eyelink.EyeTracker':
@@ -82,7 +81,7 @@ win.flip()
 event.waitKeys()
 
 #Create no report blcok
-w_block_no_report_start_practice = block.Block(experiment_type='w', block_id=1, n_trials=n_no_report, report=False, is_practice=True)
+w_block_no_report_start_practice = block.Block(experiment_type='w', block_id=1, n_trials=n_practice_no_report, report=False, is_practice=True)
 
 w_block_no_report_start = block.Block(experiment_type='w', block_id=1, n_trials=n_no_report, report=False, is_practice=False)
 
