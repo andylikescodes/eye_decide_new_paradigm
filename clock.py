@@ -48,7 +48,7 @@ class Clock:
 
 	def draw_moving_clock(self, win, event, play_random_sound=False, tracker=None, beep_dist=None, exp=None):
 		timer = core.Clock()
-
+		event.clearEvents()
 		# Play sound properties
 		if play_random_sound == True:
 			random.seed() # Set random seed to get random sequence everytime.
@@ -78,13 +78,10 @@ class Clock:
 			timer.add(2.5)
 
 			time_start = timer.getTime()
-			# clock_where = math.pi/2
-			while True:
-				time_now = timer.getTime()
-				if (time_now >= 0):
-					break
-
-				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi
+			clock_where = math.pi/2
+			time_now = time_start
+			while time_now <= 0:
+				# print(rotations)
 				dot_x, dot_y = self.cal_pos(self.radius, clock_where)
 				circle.draw()
 				fixation.draw()
@@ -112,9 +109,14 @@ class Clock:
 							pressed = 1
 							event_time = 2.5 * rotations + (time_now - time_start)
 							exp.addData('event_time', event_time)
-							
 				elif (rotations <= 1):
 					event.clearEvents()
+
+				time_now = timer.getTime()
+				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi
+				# print(time_now)
+				# print(clock_where)
+				# print((time_now - time_start)/2.5)
 
 		# MSG Eye-tracker - clock closed
 		tracker.sendMessage('CLOCK OFFSET')
