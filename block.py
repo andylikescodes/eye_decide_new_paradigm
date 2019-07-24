@@ -21,15 +21,18 @@ class Block:
 
 	def run(self, win, mouse, event, tracker=None, exp=None, beep_dist=None):
 		if self.report == False:
-			block_txt = GENERAL_INSTR + NO_REPORT_INSTR
+			block_txt = NO_REPORT_INSTR
 		if self.type == 'w':
-			block_txt = GENERAL_INSTR + W_TIME_INSTR
+			block_txt = W_TIME_INSTR
 		if self.type == 'm':
-			block_txt = GENERAL_INSTR + M_TIME_INSTR
+			block_txt = M_TIME_INSTR
 		if self.type == 's':
-			block_txt = GENERAL_INSTR + S_TIME_INSTR
+			block_txt = S_TIME_INSTR
 		if self.type == 'i':
-			block_txt = GENERAL_INSTR + I_TIME_INSTR
+			block_txt = I_TIME_INSTR
+
+		if self.is_practice == True:
+			block_txt = 'PRACTICE: ' + block_txt
 
 		self.draw_text(win, block_txt)
 		event.waitKeys(keyList=['space'])

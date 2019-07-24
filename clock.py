@@ -7,12 +7,11 @@ import numpy as np
 
 class Clock:
 	def __init__(self, radius, tick_length=0.5, user_input=True, 
-				edges=64, clock_stopping_range=[math.pi/2, math.pi]):
+				edges=64):
 		self.radius = radius
 		self.edges = edges
 		self.user_input = user_input
 		self.tick_length = tick_length
-		self.clock_stopping_range = clock_stopping_range
 
 	def cal_pos(self, radius, radians):
 		dot_x = radius * math.cos(radians)
@@ -67,23 +66,22 @@ class Clock:
 
 		pressed = -1
 		sound_played = -1
+		clock_keep_running = 0
 		key=[]
 		# MSG Eye-tracker - clock display
 		tracker.sendMessage('CLOCK ONSET')
-		while True:
+		while clock_keep_running < 1:
+			if (pressed == 1) | (sound_played == 1):
+				clock_keep_running += 1
+
 			rotations = rotations + 1
 			timer.add(2.5)
 
 			time_start = timer.getTime()
-			clock_end = 2 * math.pi
-			clock_where = math.pi/2
+			# clock_where = math.pi/2
 			while True:
 				time_now = timer.getTime()
-				if (pressed == -1) & (time_now >= 0):
-					break
-				if (pressed == 1) & (clock_where <= clock_end):
-					break
-				if (sound_played == 1) & (clock_where <= clock_end):
+				if (time_now > 0):
 					break
 
 				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi
@@ -105,7 +103,6 @@ class Clock:
 							event_time = beep_time[0]
 							exp.addData('event_time', event_time)
 							sound_played = 1
-							clock_end = where_beep_clock - np.random.uniform(low=self.clock_stopping_range[0], high=self.clock_stopping_range[1])
 
 				if (self.user_input == True) & (rotations > 1) & (pressed==-1) & (play_random_sound == False):
 					key = event.getKeys(keyList=['space'])
@@ -115,12 +112,10 @@ class Clock:
 							pressed = 1
 							event_time = 2.5 * rotations + (time_now - time_start)
 							exp.addData('event_time', event_time)
-							clock_end = clock_where - np.random.uniform(low=self.clock_stopping_range[0], high=self.clock_stopping_range[1])
+							
 				elif (rotations <= 1):
 					event.clearEvents()
 
-			if (pressed == 1) | (sound_played == 1):
-				break
 		# MSG Eye-tracker - clock closed
 		tracker.sendMessage('CLOCK OFFSET')
 		# Add a 0.5 seconds after the clock was played

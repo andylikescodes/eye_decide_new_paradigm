@@ -11,10 +11,11 @@ myDlg = gui.Dlg(title="Experiment")
 myDlg.addText('Subject info')
 myDlg.addField('subject_id:', 000)
 myDlg.addText('Experiment Info')
-myDlg.addField('number of trials for the no report  block:', 30)
-myDlg.addField('number of trials for each of the practic block', 10)
-myDlg.addField('number of blocks for each experiment type:', 4)
-myDlg.addField('number of trials for each block:', 10)
+myDlg.addField('number of trials for the no report practice block:', 10)
+myDlg.addField('number of trials for the no report  block:', 25)
+myDlg.addField('number of trials for each of the practice block', 10)
+myDlg.addField('number of blocks for each experiment type:', 5)
+myDlg.addField('number of trials for each experiment block:', 10)
 ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
 if myDlg.OK:  # or if ok_data is not None
     print(ok_data)
@@ -52,7 +53,7 @@ exp = ExperimentHandler()
 
 # Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
-                    monitor='testMonitor', units='deg', fullscr=True)
+                    monitor='testMonitor', units='deg', fullscr=False)
 
 # win = visual.Window([800,600],allowGUI=True,
 #                     monitor='testMonitor', units='deg')
@@ -66,8 +67,8 @@ mouse.setVisible(visible=0)
 # display instructions to start the experiment
 fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
                               tex=None, mask='circle', size=0.2)
-message1 = visual.TextStim(win, pos=[0,+3], text='Hit a key when ready.')
-message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is about to start!")
+message1 = visual.TextStim(win, pos=[0,+3], text='Read general instructions.')
+message2 = visual.TextStim(win, pos=[0,-3], text="Press spacebar when ready.")
 message1.draw()
 message2.draw()
 fixation.draw()
@@ -76,6 +77,8 @@ win.flip()
 event.waitKeys()
 
 #Create no report blcok
+w_block_no_report_start_practice = block.Block(experiment_type='w', block_id=1, n_trials=n_no_report, report=False, is_practice=True)
+
 w_block_no_report_start = block.Block(experiment_type='w', block_id=1, n_trials=n_no_report, report=False, is_practice=False)
 
 #Create practice blocks
@@ -102,6 +105,7 @@ practice_block_list = [practice_block_w, practice_block_m, practice_block_s, pra
 random.shuffle(practice_block_list)
 
 # block sequence
+w_block_no_report_start_practice.run(win, mouse, event, exp=exp, tracker=tracker) # Start with a no report w block
 w_block_no_report_start.run(win, mouse, event, exp=exp, tracker=tracker) # Start with a no report w block
 
 s_beep_dist = w_block_no_report_start.event_time_dist

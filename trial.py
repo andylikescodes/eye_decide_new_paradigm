@@ -19,7 +19,10 @@ class Trial:
 	def draw_fixation(self, win, draw_now=True):
 		fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
                       tex=None, mask='circle', size=0.2)
-		return fixation
+		fixation.draw()
+		if draw_now == True:
+			win.flip()
+
 
 	def report(self, win, instr_txt, mouse=None, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, is_report=True):
 		self.draw_text(win, instr_txt)
@@ -39,29 +42,26 @@ class Trial:
 				tick.draw()
 
 			dot_x, dot_y = mouse.getPos()
-			
+			r = np.sqrt(dot_x**2 + dot_y**2)
+			theta = math.acos(dot_x/r)
+
+			if dot_y < 0:
+				theta = -theta
+
+			dot_x = self.clock.radius * math.cos(theta)
+			dot_y = self.clock.radius * math.sin(theta)
+
 			circle_ball.pos = [dot_x, dot_y]
 			circle_ball.draw()
 			win.flip()
-			buttons = mouse.getPressed()
 
+			buttons = mouse.getPressed()
 			if buttons[0] == 1:
 				circle.draw()
 				fixation.draw()
 				for tick in ticks:
 					tick.draw()
 
-				xx = dot_x
-				yy = dot_y
-				r = np.sqrt(xx**2 + yy**2)
-				theta = math.acos(xx/r)
-
-				# Flip the radian while yy is negative. Sign loses during arccosin operation
-				if yy < 0:
-					theta = -theta
-				
-				dot_x = self.clock.radius * math.cos(theta)
-				dot_y = self.clock.radius * math.sin(theta)
 				circle_ball.pos = [dot_x, dot_y]
 				circle_ball.draw()
 				win.flip()
@@ -96,18 +96,23 @@ class Trial:
 		exp.nextEntry()
 		core.wait(0.3)
 
+	def draw_trial_instr(self, win, trial_number, task_instr):
+		trial_number_text = 'Trial #' + str(trial_number)
+		# Trial discription
+		self.draw_text(win, trial_number_text, pos=[0, +3], draw_now=False)
+		self.draw_text(win, task_instr, pos=[0, -3], draw_now=False)
+		self.draw_fixation(win, draw_now=False)
+
 	def run(self, win, mouse, event, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
 		# MSG eye-tracker: Trial starts
 		tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
 		event_time = 0
 		if self.type =='w':
-			w_text = '''
-			Trial#{}
-
-			{}
-			'''.format(str(trial_number), NO_REPORT_PER_TRIAL_INSTR) 
-			# Trial discription
-			self.draw_text(win, w_text)
+			if report == False:
+				self.draw_trial_instr(win, trial_number, NO_REPORT_PER_TRIAL_INSTR)
+			else:
+				self.draw_trial_instr(win, trial_number, W_TIME_PER_TRIAL_INSTR)
+			win.flip()
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
 			# Test without eyetracker
@@ -124,12 +129,8 @@ class Trial:
 
 		if self.type =='m':
 		# Trial discription
-			m_text = '''
-			Trial#{}
-
-			{}
-			'''.format(str(trial_number), M_TIME_PER_TRIAL_INSTR) 
-			self.draw_text(win, m_text)
+			self.draw_trial_instr(win, trial_number, M_TIME_PER_TRIAL_INSTR)
+			win.flip()
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
 			# Test without eyetracker
@@ -147,12 +148,8 @@ class Trial:
 
 		if self.type == 'i':
 			# Trial discription
-			i_text = '''
-			Trial#{}
-
-			{}
-			'''.format(str(trial_number), I_TIME_PER_TRIAL_INSTR) 
-			self.draw_text(win, i_text)
+			self.draw_trial_instr(win, trial_number, I_TIME_PER_TRIAL_INSTR)
+			win.flip()
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
 			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
@@ -171,12 +168,8 @@ class Trial:
 
 		if self.type == 's':
 			# Trial discription
-			s_text = '''
-			Trial#{}
-
-			{}
-			'''.format(str(trial_number), S_TIME_PER_TRIAL_INSTR) 
-			self.draw_text(win, s_text)
+			self.draw_trial_instr(win, trial_number, S_TIME_PER_TRIAL_INSTR)
+			win.flip()
 			# Draw a fixation point
 			event.waitKeys(keyList=['space'])
 			event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist, tracker=tracker)
