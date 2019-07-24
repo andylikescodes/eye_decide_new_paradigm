@@ -24,10 +24,12 @@ else:
 
 # Grab information from user input:
 subject_id = ok_data[0]
-n_no_report = ok_data[1]
-n_practice_each_block = ok_data[2]
-n_blocks_each_type = ok_data[3]
-n_trials_per_block = ok_data[4]
+n_practice_no_report = ok_data[1]
+n_no_report = ok_data[2]
+n_practice_each_block = ok_data[3]
+n_blocks_each_type = ok_data[4]
+n_trials_per_block = ok_data[5]
+
 
 edf_filename = './'+str(subject_id)
 
