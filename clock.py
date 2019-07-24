@@ -81,7 +81,7 @@ class Clock:
 			# clock_where = math.pi/2
 			while True:
 				time_now = timer.getTime()
-				if (time_now > 0):
+				if (time_now >= 0):
 					break
 
 				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi

@@ -51,6 +51,9 @@ r = tracker.runSetupProcedure()
 # Create experiment handler (data input) to record user inputs
 exp = ExperimentHandler()
 
+# add global event key to terminate the program
+event.globalKeys.add(key='q', modifiers=['ctrl'], func=core.quit)
+
 # Create window to show stimuli
 win = visual.Window([1920,1080],allowGUI=True,
                     monitor='testMonitor', units='deg', fullscr=True)
