@@ -4,6 +4,7 @@ import block
 from config import *
 from psychopy.iohub import launchHubServer
 from psychopy.data import ExperimentHandler
+import utils
 
 # Get user input for saving the data
 
@@ -69,14 +70,8 @@ mouse = event.Mouse(win=win)
 mouse.setVisible(visible=0)
 
 # display instructions to start the experiment
-fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
-                              tex=None, mask='circle', size=0.2)
-message1 = visual.TextStim(win, pos=[0,+3], text='Read general instructions.')
-message2 = visual.TextStim(win, pos=[0,-3], text="Press spacebar when ready.")
-message1.draw()
-message2.draw()
-fixation.draw()
-win.flip()
+utils.draw_instructions(win, GENERAL_INSTR, )
+
 #pause until there's a keypress
 event.waitKeys()
 
@@ -109,28 +104,33 @@ practice_block_list = [practice_block_w, practice_block_m, practice_block_s, pra
 random.shuffle(practice_block_list)
 
 # block sequence
+# Experiment Starts
+# ===> Starting with no report blocks
 w_block_no_report_start_practice.run(win, mouse, event, exp=exp, tracker=tracker) # Start with a no report w block
 w_block_no_report_start.run(win, mouse, event, exp=exp, tracker=tracker) # Start with a no report w block
 
-s_beep_dist = w_block_no_report_start.event_time_dist
+s_beep_dist = w_block_no_report_start.event_time_dist # Get distribution of the w time from the no report to generate beep sound
 
+# ===> Practice blocks
 for block in practice_block_list:
     block.run(win, mouse, event, exp=exp, beep_dist=s_beep_dist, tracker=tracker) # Run practice blocks
 
+# ===> Experiment blocks
+utils.draw_instructions(win, PRACTICE_OVER_1, PRACTICE_OVER_2)
+event.waitKeys()
 for block in experiment_block_list:
     block.run(win, mouse, event, exp=exp, beep_dist=s_beep_dist, tracker=tracker) # Run experiment blocks
 
+# ===> Ending with no report blocks
+utils.draw_instructions(win, END_NO_REPORT_1, END_NO_REPORT_2)
+event.waitKeys()
 w_block_no_report_end.run(win, mouse, event, exp=exp, tracker=tracker) # End with a no report w block
 
 # Save the output files
 exp.saveAsWideText(fileName=str(subject_id) + '.csv', delim=',')
 
 # Display experiment end txt
-message1 = visual.TextStim(win, pos=[0,+3], text='Thank you for your participation.')
-message2 = visual.TextStim(win, pos=[0,-3], text="The experiment is ended, press any key to exit the experiment!")
-message1.draw()
-message2.draw()
-win.flip()
+utils.draw_instructions(win, END_EXPERIMENT_TEXT_1, END_EXPERIMENT_TEXT_2)
 #pause until there's a keypress
 event.waitKeys()
 

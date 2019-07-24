@@ -1,11 +1,24 @@
 DUMMY = True
 
-GENERAL_INSTR = '''
-In the following trials you will see a clock with a dot moving around it. Keep your eyes focused on the cross in the middle of the clock. On every trial wait until the dot has made a full revolution around the clock and then continue with the trial-specific instructions.
+GENERAL_INSTR_UPPER = '''
+The experiment is about to begin.
 '''
 
+GENERAL_INSTR_LOWER = '''
+Please wait for your experimenter to press spacebar.
+'''
+
+PRACTICE_OVER_1 = "Practice is over."
+PRACTICE_OVER_2 = "The main experiment will begin."
+
+END_NO_REPORT_1 = "You will now complete this without any reporting."
+END_NO_REPORT_2 = "Similar to the beginning of the experiment."
+
+END_EXPERIMENT_TEXT_1 = "Thank you for your participation."
+END_EXPERIMENT_TEXT_2 = "The experiment is ended, press any key to exit the experiment!"
+
 NO_REPORT_INSTR = '''
-Read no report instructions. Press spacebar to continue.
+No-Report: Press spacebar to continue.
 '''
 
 REPORT_INSTR = '''
@@ -13,11 +26,11 @@ REPORT_INSTR = '''
 '''
 
 NO_REPORT_PER_TRIAL_INSTR = '''
-No-report: Move whenever you feel the urge to do so.
+No-Report: Move whenever you feel the urge to do so.
 '''
 
 W_TIME_INSTR = '''
-Read W-Time instructions. Press spacebar to continue.
+W-Time: Press spacebar to continue.
 '''
 
 W_TIME_PER_TRIAL_INSTR = '''
@@ -29,7 +42,7 @@ Click where you first felt an urge or intention to move on the clock. Press esc 
 '''
 
 M_TIME_INSTR = '''
-Read M-Time instructions. Press spacebar to continue.
+M-Time: Press spacebar to continue.
 '''
 
 M_TIME_PER_TRIAL_INSTR = '''
@@ -41,7 +54,7 @@ Click where you actually moved on the clock. Press esc to reset your choice and 
 '''
 
 S_TIME_INSTR = '''
-Read S-Time instructions. Press spacebar to continue.
+S-Time: Press spacebar to continue.
 '''
 
 S_TIME_PER_TRIAL_INSTR = '''
@@ -53,7 +66,7 @@ Click where the tone occurred on the clock. Press esc to reset your choice and p
 '''
 
 I_TIME_INSTR = '''
-Read I-Time instructions. Press spacebar to continue.
+I-Time: Press spacebar to continue.
 '''
 
 I_TIME_PER_TRIAL_INSTR = '''

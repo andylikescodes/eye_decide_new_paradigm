@@ -35,21 +35,12 @@ class Trial:
 				edges=self.clock.edges, lineWidth=3, units='deg')
 
 		while True:
-			mouse.setVisible(visible=1)
 			circle.draw()
 			fixation.draw()
 			for tick in ticks:
 				tick.draw()
 
 			dot_x, dot_y = mouse.getPos()
-			r = np.sqrt(dot_x**2 + dot_y**2)
-			theta = math.acos(dot_x/r)
-
-			if dot_y < 0:
-				theta = -theta
-
-			dot_x = self.clock.radius * math.cos(theta)
-			dot_y = self.clock.radius * math.sin(theta)
 
 			circle_ball.pos = [dot_x, dot_y]
 			circle_ball.draw()
@@ -61,6 +52,15 @@ class Trial:
 				fixation.draw()
 				for tick in ticks:
 					tick.draw()
+
+				r = np.sqrt(dot_x**2 + dot_y**2)
+				theta = math.acos(dot_x/r)
+
+				if dot_y < 0:
+					theta = -theta
+
+				dot_x = self.clock.radius * math.cos(theta)
+				dot_y = self.clock.radius * math.sin(theta)
 
 				circle_ball.pos = [dot_x, dot_y]
 				circle_ball.draw()
