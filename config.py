@@ -1,10 +1,12 @@
+# Mode - only for testing purpose
 DUMMY = True
 
-GENERAL_INSTR_UPPER = '''
+# All instruction texts
+GENERAL_INSTR_1 = '''
 The experiment is about to begin.
 '''
 
-GENERAL_INSTR_LOWER = '''
+GENERAL_INSTR_2 = '''
 Please wait for your experimenter to press spacebar.
 '''
 
@@ -21,9 +23,6 @@ NO_REPORT_INSTR = '''
 No-Report: Press spacebar to continue.
 '''
 
-REPORT_INSTR = '''
-
-'''
 
 NO_REPORT_PER_TRIAL_INSTR = '''
 No-Report: Move whenever you feel the urge to do so.

@@ -49,6 +49,7 @@ class Clock:
 	def draw_moving_clock(self, win, event, play_random_sound=False, tracker=None, beep_dist=None, exp=None):
 		timer = core.Clock()
 		event.clearEvents()
+		event_time = None
 		# Play sound properties
 		if play_random_sound == True:
 			random.seed() # Set random seed to get random sequence everytime.
@@ -66,12 +67,17 @@ class Clock:
 
 		pressed = -1
 		sound_played = -1
-		clock_keep_running = 0
+		if self.user_input == True:
+			clock_keep_running = 0
+		else:
+			clock_keep_running = -1
 		key=[]
 		# MSG Eye-tracker - clock display
-		tracker.sendMessage('CLOCK ONSET')
+		if (self.user_input==True):
+			tracker.sendMessage('CLOCK ONSET')
+
 		while clock_keep_running < 1:
-			if (pressed == 1) | (sound_played == 1):
+			if (pressed == 1) | (sound_played == 1) | (self.user_input==False):
 				clock_keep_running += 1
 
 			rotations = rotations + 1
@@ -119,7 +125,8 @@ class Clock:
 				# print((time_now - time_start)/2.5)
 
 		# MSG Eye-tracker - clock closed
-		tracker.sendMessage('CLOCK OFFSET')
+		if (self.user_input==True):
+			tracker.sendMessage('CLOCK OFFSET')
 		# Add a 0.5 seconds after the clock was played
 		core.wait(0.5)
 		return event_time

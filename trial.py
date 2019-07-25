@@ -96,94 +96,99 @@ class Trial:
 		exp.nextEntry()
 		core.wait(0.3)
 
-	def draw_trial_instr(self, win, trial_number, task_instr):
-		trial_number_text = 'Trial #' + str(trial_number)
+	def draw_trial_instr(self, win, total_block_trials, trial_number, task_instr):
+		trial_number_text = 'Trial ' + str(trial_number) + '/' + str(total_block_trials)
 		# Trial discription
-		self.draw_text(win, trial_number_text, pos=[0, +3], draw_now=False)
-		self.draw_text(win, task_instr, pos=[0, -3], draw_now=False)
+		self.draw_text(win, task_instr, pos=[0, +3], draw_now=False)
+		self.draw_text(win, trial_number_text, pos=[0, -3], draw_now=False)
 		self.draw_fixation(win, draw_now=False)
 
-	def run(self, win, mouse, event, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
-		# MSG eye-tracker: Trial starts
-		tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
-		event_time = 0
-		if self.type =='w':
-			if report == False:
-				self.draw_trial_instr(win, trial_number, NO_REPORT_PER_TRIAL_INSTR)
-			else:
-				self.draw_trial_instr(win, trial_number, W_TIME_PER_TRIAL_INSTR)
-			win.flip()
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
-			# Report 
-			if report == True:
-				report_text = W_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+	def run(self, win, mouse, event, total_block_trials, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
 
-		if self.type =='m':
-		# Trial discription
-			self.draw_trial_instr(win, trial_number, M_TIME_PER_TRIAL_INSTR)
-			win.flip()
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
+		if self.type == 'test':
+			self.clock.user_input = False
+			self.clock.draw_moving_clock(win, event)
+		else:
+			# MSG eye-tracker: Trial start
+			tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
+			event_time = 0
+			if self.type =='w':
+				if report == False:
+					self.draw_trial_instr(win, total_block_trials, trial_number, NO_REPORT_PER_TRIAL_INSTR)
+				else:
+					self.draw_trial_instr(win, total_block_trials, trial_number, W_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
+				# Report 
+				if report == True:
+					report_text = W_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-			# Report 
-			if report == True:
-				report_text = M_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
-
-		if self.type == 'i':
+			if self.type =='m':
 			# Trial discription
-			self.draw_trial_instr(win, trial_number, I_TIME_PER_TRIAL_INSTR)
-			win.flip()
-			# Draw a fixation point
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
+				self.draw_trial_instr(win, total_block_trials, trial_number, M_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
-			# Report 
-			if report == True:
-				report_text = I_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+				# Report 
+				if report == True:
+					report_text = M_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-		if self.type == 's':
-			# Trial discription
-			self.draw_trial_instr(win, trial_number, S_TIME_PER_TRIAL_INSTR)
-			win.flip()
-			# Draw a fixation point
-			event.waitKeys(keyList=['space'])
-			event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist, tracker=tracker)
+			if self.type == 'i':
+				# Trial discription
+				self.draw_trial_instr(win, total_block_trials, trial_number, I_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				# Draw a fixation point
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
-			# Report 
-			if report == True:
-				report_text = S_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+				# Report 
+				if report == True:
+					report_text = I_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-		## MSG eye-tracker: trial ends
-		tracker.sendMessage('TRIAL {} ENDS'.format(str(trial_number)))
-		return event_time
+			if self.type == 's':
+				# Trial discription
+				self.draw_trial_instr(win, total_block_trials, trial_number, S_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				# Draw a fixation point
+				event.waitKeys(keyList=['space'])
+				event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist, tracker=tracker)
+
+				# Report 
+				if report == True:
+					report_text = S_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+
+			## MSG eye-tracker: trial ends
+			tracker.sendMessage('TRIAL {} ENDS'.format(str(trial_number)))
+			return event_time
