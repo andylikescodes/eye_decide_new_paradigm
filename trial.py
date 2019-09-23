@@ -4,10 +4,9 @@ import numpy as np
 import math, random
 from config import *
 
-
 # Trial class
 class Trial:
-	def __init__(self, experiment_type, clock_radius=4):
+	def __init__(self, experiment_type, clock_radius=2.5):
 		self.type = experiment_type
 		self.clock = c.Clock(radius=clock_radius)
 
@@ -20,7 +19,10 @@ class Trial:
 	def draw_fixation(self, win, draw_now=True):
 		fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
                       tex=None, mask='circle', size=0.2)
-		return fixation
+		fixation.draw()
+		if draw_now == True:
+			win.flip()
+
 
 	def report(self, win, instr_txt, mouse=None, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, is_report=True):
 		self.draw_text(win, instr_txt)
@@ -31,38 +33,47 @@ class Trial:
 		ticks = self.clock.draw_ticks(win)
 		circle_ball = visual.Circle(win, radius=0.2, fillColor='white', 
 				edges=self.clock.edges, lineWidth=3, units='deg')
+					circle.draw()
+
+		circle.draw()
+		fixation.draw()
+		for tick in ticks:
+			tick.draw()
+
+		dot_x, dot_y = mouse.getPos()
+
+		circle_ball.pos = [0, 0]
+		circle_ball.draw()
+		win.flip()
 
 		while True:
-			mouse.setVisible(visible=1)
 			circle.draw()
 			fixation.draw()
 			for tick in ticks:
 				tick.draw()
 
 			dot_x, dot_y = mouse.getPos()
-			
-			circle_ball.pos = [dot_x/2, dot_y/2]
+
+			circle_ball.pos = [dot_x, dot_y]
 			circle_ball.draw()
 			win.flip()
-			buttons = mouse.getPressed()
 
+			buttons = mouse.getPressed()
 			if buttons[0] == 1:
 				circle.draw()
 				fixation.draw()
 				for tick in ticks:
 					tick.draw()
 
-				xx = dot_x
-				yy = dot_y
-				r = np.sqrt(xx**2 + yy**2)
-				theta = math.acos(xx/r)
+				r = np.sqrt(dot_x**2 + dot_y**2)
+				theta = math.acos(dot_x/r)
 
-				# Flip the radian while yy is negative. Sign loses during arccosin operation
-				if yy < 0:
+				if dot_y < 0:
 					theta = -theta
-				
+
 				dot_x = self.clock.radius * math.cos(theta)
 				dot_y = self.clock.radius * math.sin(theta)
+
 				circle_ball.pos = [dot_x, dot_y]
 				circle_ball.draw()
 				win.flip()
@@ -97,99 +108,103 @@ class Trial:
 		exp.nextEntry()
 		core.wait(0.3)
 
-	def run(self, win, mouse, event, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
-		# MSG eye-tracker: Trial starts
-		event_time = 0
-		if self.type =='w':
-			w_text = '''
-			Trial#{}
-
-			{}
-			'''.format(str(trial_number), W_TIME_PER_TRIAL_INSTR) # TODO: Change this later for stuff
-			# Trial discription
-			self.draw_text(win, w_text)
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
-			# Report 
-			if report == True:
-				report_text = W_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
-
-		if self.type =='m':
+	def draw_trial_instr(self, win, total_block_trials, trial_number, task_instr):
+		trial_number_text = 'Trial ' + str(trial_number) + '/' + str(total_block_trials)
 		# Trial discription
-			m_text = '''
-			Trial#{}
+		self.draw_text(win, task_instr, pos=[0, +3], draw_now=False)
+		self.draw_text(win, trial_number_text, pos=[0, -3], draw_now=False)
+		self.draw_fixation(win, draw_now=False)
 
-			{}
-			'''.format(str(trial_number), M_TIME_PER_TRIAL_INSTR)
-			self.draw_text(win, m_text)
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
+	def run(self, win, mouse, event, total_block_trials, tracker=None, report=True, exp=None, block_type=None, block_id=None, trial_number=None, is_practice=False, beep_dist=None):
 
-			# Report 
-			if report == True:
-				report_text = M_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+		if self.type == 'test':
+			self.clock.user_input = False
+			self.clock.draw_moving_clock(win, event)
+		else:
+			# MSG eye-tracker: Trial start
+			tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
+            
+            # MSG parallel port: Trial start
+    
+            
+			event_time = 0
+			if self.type =='w':
+				if report == False:
+					self.draw_trial_instr(win, total_block_trials, trial_number, NO_REPORT_PER_TRIAL_INSTR)
+				else:
+					self.draw_trial_instr(win, total_block_trials, trial_number, W_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
+				# Report 
+				if report == True:
+					report_text = W_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-		if self.type == 'i':
+			if self.type =='m':
 			# Trial discription
-			i_text = '''
-			Trial#{}
+				self.draw_trial_instr(win, total_block_trials, trial_number, M_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
-			{}
-			'''.format(str(trial_number), I_TIME_PER_TRIAL_INSTR)
-			self.draw_text(win, i_text)
-			# Draw a fixation point
-			event.waitKeys(keyList=['space'])
-			# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
-			# Test without eyetracker
-			event_time = self.clock.draw_moving_clock(win, event, exp=exp)
+				# Report 
+				if report == True:
+					report_text = M_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-			# Report 
-			if report == True:
-				report_text = I_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+			if self.type == 'i':
+				# Trial discription
+				self.draw_trial_instr(win, total_block_trials, trial_number, I_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				# Draw a fixation point
+				event.waitKeys(keyList=['space'])
+				# clock.draw_moving_clock(win, event, tracker) # Draw a moving clock
+				# Test without eyetracker
+				event_time = self.clock.draw_moving_clock(win, event, exp=exp, tracker=tracker)
 
-		if self.type == 's':
-			# Trial discription
-			s_text = '''
-			Trial#{}
+				# Report 
+				if report == True:
+					report_text = I_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-			{}
-			'''.format(str(trial_number), S_TIME_PER_TRIAL_INSTR)
-			self.draw_text(win, s_text)
-			# Draw a fixation point
-			event.waitKeys(keyList=['space'])
-			event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist)
+			if self.type == 's':
+				# Trial discription
+				self.draw_trial_instr(win, total_block_trials, trial_number, S_TIME_PER_TRIAL_INSTR)
+				win.flip()
+				# Draw a fixation point
+				event.waitKeys(keyList=['space'])
+				event_time = self.clock.draw_moving_clock(win, event, play_random_sound=True, exp=exp, beep_dist=beep_dist, tracker=tracker)
 
-			# Report 
-			if report == True:
-				report_text = S_TIME_PER_REPORT_INSTR
-				# MSG - report starts
-				self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
-							block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
-				# MSG - report ends
-			elif report == False:
-				self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
+				# Report 
+				if report == True:
+					report_text = S_TIME_PER_REPORT_INSTR
+					# MSG - report starts
+					self.report(win, instr_txt=report_text, mouse=mouse, exp=exp, 
+								block_type=block_type, block_id=block_id, trial_number=trial_number, is_practice=is_practice)
+					# MSG - report ends
+				elif report == False:
+					self.no_report(exp=exp, block_type='no_report', block_id=block_id, trial_number=trial_number, is_practice=is_practice, is_report=report)
 
-		## MSG eye-tracker: trial ends
-		return event_time
+			## MSG eye-tracker: trial ends
+			tracker.sendMessage('TRIAL {} ENDS'.format(str(trial_number)))
+			return event_time

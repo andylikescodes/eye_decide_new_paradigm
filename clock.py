@@ -7,12 +7,11 @@ import numpy as np
 
 class Clock:
 	def __init__(self, radius, tick_length=0.5, user_input=True, 
-				edges=64, clock_stopping_range=[math.pi/4, math.pi/2]):
+				edges=64):
 		self.radius = radius
 		self.edges = edges
 		self.user_input = user_input
 		self.tick_length = tick_length
-		self.clock_stopping_range = clock_stopping_range
 
 	def cal_pos(self, radius, radians):
 		dot_x = radius * math.cos(radians)
@@ -49,7 +48,8 @@ class Clock:
 
 	def draw_moving_clock(self, win, event, play_random_sound=False, tracker=None, beep_dist=None, exp=None):
 		timer = core.Clock()
-
+		event.clearEvents()
+		event_time = None
 		# Play sound properties
 		if play_random_sound == True:
 			random.seed() # Set random seed to get random sequence everytime.
@@ -63,31 +63,33 @@ class Clock:
 		circle, fixation, ticks = self.draw_plain_clock(win)
 		ball = visual.Circle(win, radius=0.2, fillColor='white', pos=[0,0], 
 					edges=self.edges, lineWidth=3)
+		speaker = Sound(value="F", secs=0.2, stereo=False)
 
 		pressed = -1
 		sound_played = -1
+		if self.user_input == True:
+			clock_keep_running = 0
+		else:
+			clock_keep_running = -1
 		key=[]
 		# MSG Eye-tracker - clock display
-		
-		while True:
+		if (self.user_input==True):
+			tracker.sendMessage('CLOCK ONSET')
+            port.sendData(3)
+            port.sendData(0)
+
+		while clock_keep_running < 1:
+			if (pressed == 1) | (sound_played == 1) | (self.user_input==False):
+				clock_keep_running += 1
+
 			rotations = rotations + 1
 			timer.add(2.5)
 
 			time_start = timer.getTime()
-			clock_end = 2 * math.pi
 			clock_where = math.pi/2
-			while True:
-				print('iter_starts:')
-				time_now = timer.getTime()
-				print(time_now)
-				if (pressed == -1) & (time_now >= 0):
-					break
-				if (pressed == 1) & (clock_where <= clock_end):
-					break
-				if (sound_played == 1) & (clock_where <= clock_end):
-					break
-
-				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi
+			time_now = time_start
+			while time_now <= 0:
+				# print(rotations)
 				dot_x, dot_y = self.cal_pos(self.radius, clock_where)
 				circle.draw()
 				fixation.draw()
@@ -101,34 +103,44 @@ class Clock:
 					if (beep_rotation == rotations):
 						where_beep_clock = math.pi/2 - beep_time_this_clock/2.5 * 2 * math.pi
 						if (where_beep_clock >= clock_where):
-							speaker = Sound(value="F", secs=0.2, stereo=False)
 							speaker.play()
-							#tracker.sendMessage('Sound Played RECORDED.')
+                            
+                            # Send messages
+							tracker.sendMessage('EVENT-TIME RECORDED - SOUND PLAYED.')
+                            port.sendData(5)
+                            port.sendData(0)
+                            
 							event_time = beep_time[0]
 							exp.addData('event_time', event_time)
 							sound_played = 1
-							clock_end = where_beep_clock - np.random.uniform(low=self.clock_stopping_range[0], high=self.clock_stopping_range[1])
 
 				if (self.user_input == True) & (rotations > 1) & (pressed==-1) & (play_random_sound == False):
 					key = event.getKeys(keyList=['space'])
 					if key:
 						if key[0] == 'space':
-							#tracker.sendMessage('M-TIME RECORDED.')
+                            
+                            # Send messages
+							tracker.sendMessage('EVENT-TIME RECORDED - KEYPRESSED.')
+                            port.sendData(6)
+                            port.sendData(0)
+                            
 							pressed = 1
 							event_time = 2.5 * rotations + (time_now - time_start)
 							exp.addData('event_time', event_time)
-							clock_end = clock_where - np.random.uniform(low=self.clock_stopping_range[0], high=self.clock_stopping_range[1])
 				elif (rotations <= 1):
 					event.clearEvents()
 
-				print('iter_ends:')
 				time_now = timer.getTime()
-				print(time_now)
+				clock_where = math.pi/2-(time_now - time_start)/2.5 * 2 * math.pi
+				# print(time_now)
+				# print(clock_where)
+				# print((time_now - time_start)/2.5)
 
-			if (pressed == 1) | (sound_played == 1):
-				break
 		# MSG Eye-tracker - clock closed
-
+		if (self.user_input==True):
+			tracker.sendMessage('CLOCK OFFSET')
+            port.sendData(4)
+            port.sendData(0)
 		# Add a 0.5 seconds after the clock was played
 		core.wait(0.5)
 		return event_time
