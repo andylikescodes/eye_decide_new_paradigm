@@ -18,7 +18,7 @@ class Trial:
 
 	def draw_fixation(self, win, draw_now=True):
 		fixation = visual.GratingStim(win, color='white', colorSpace='rgb',
-                      tex=None, mask='circle', size=0.2)
+									tex=None, mask='circle', size=0.2)
 		fixation.draw()
 		if draw_now == True:
 			win.flip()
@@ -33,8 +33,18 @@ class Trial:
 		ticks = self.clock.draw_ticks(win)
 		circle_ball = visual.Circle(win, radius=0.2, fillColor='white', 
 				edges=self.clock.edges, lineWidth=3, units='deg')
+					circle.draw()
 
-		mouse.setPos(newPos=(0,0))
+		circle.draw()
+		fixation.draw()
+		for tick in ticks:
+			tick.draw()
+
+		dot_x, dot_y = mouse.getPos()
+
+		circle_ball.pos = [0, 0]
+		circle_ball.draw()
+		win.flip()
 
 		while True:
 			circle.draw()
@@ -113,6 +123,7 @@ class Trial:
 		else:
 			# MSG eye-tracker: Trial start
 			tracker.sendMessage('TRIAL {} STARTS'.format(str(trial_number)))
+
 			event_time = 0
 			if self.type =='w':
 				if report == False:

@@ -1,4 +1,4 @@
-from psychopy import core, visual, gui, data, event, logging
+from psychopy import core, visual, gui, data, event, logging, parallel
 import numpy, random
 import block
 from config import *
@@ -6,6 +6,7 @@ from psychopy.iohub import launchHubServer
 from psychopy.data import ExperimentHandler
 import utils
 import experiment_handler
+
 
 # Get user input for experiment parameters
 myDlg = gui.Dlg(title="Experiment")
@@ -75,6 +76,15 @@ win = visual.Window([1920,1080],allowGUI=True,
                     monitor='testMonitor', units='deg', fullscr=True)
 mouse = event.Mouse(win=win)
 mouse.setVisible(visible=0)
+
+# ====== EEG Event Markers Set-up
+
+# Initialize EEG trigger
+utils.sendEEGtrigger()
+
+
+
+
 # ===== Experiment
 # Start experiment
 experiment_handler.run(win, mouse, event, exp=exp, tracker=tracker,
@@ -87,6 +97,7 @@ experiment_handler.run(win, mouse, event, exp=exp, tracker=tracker,
 
 # Save the output files
 exp.saveAsWideText(fileName=str(subject_id) + '.csv', delim=',')
+
 
 #====== Exit Program
 utils.draw_instructions(win, END_EXPERIMENT_TEXT_1, END_EXPERIMENT_TEXT_2)

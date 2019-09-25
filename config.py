@@ -76,3 +76,17 @@ I_TIME_PER_REPORT_INSTR = '''
 Click where you imagined moving on the clock. Press esc to reset your choice and press space to confirm. 
 '''
 
+'''
+EEG Event Markers
+
+0 = initialization, needs to be reset after every thing
+1 = block begins
+2 = block ends
+3 = clock onset
+4 = clock offset
+5 = sound played
+6 = button pressed
+
+
+
+'''

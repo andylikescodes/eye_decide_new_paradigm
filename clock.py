@@ -75,6 +75,8 @@ class Clock:
 		# MSG Eye-tracker - clock display
 		if (self.user_input==True):
 			tracker.sendMessage('CLOCK ONSET')
+			utils.sendEEGtrigger(address=0xDFF8,message=3)
+
 
 		while clock_keep_running < 1:
 			if (pressed == 1) | (sound_played == 1) | (self.user_input==False):
@@ -102,7 +104,11 @@ class Clock:
 						where_beep_clock = math.pi/2 - beep_time_this_clock/2.5 * 2 * math.pi
 						if (where_beep_clock >= clock_where):
 							speaker.play()
+
+							# Send messages
 							tracker.sendMessage('EVENT-TIME RECORDED - SOUND PLAYED.')
+							utils.sendEEGtrigger(address=0xDFF8,message=5)
+
 							event_time = beep_time[0]
 							exp.addData('event_time', event_time)
 							sound_played = 1
@@ -111,7 +117,11 @@ class Clock:
 					key = event.getKeys(keyList=['space'])
 					if key:
 						if key[0] == 'space':
+							# Send messages
 							tracker.sendMessage('EVENT-TIME RECORDED - KEYPRESSED.')
+							utils.sendEEGtrigger(address=0xDFF8,message=6)
+
+
 							pressed = 1
 							event_time = 2.5 * rotations + (time_now - time_start)
 							exp.addData('event_time', event_time)
@@ -127,6 +137,8 @@ class Clock:
 		# MSG Eye-tracker - clock closed
 		if (self.user_input==True):
 			tracker.sendMessage('CLOCK OFFSET')
+			utils.sendEEGtrigger(address=0xDFF8,message=4)
+
 		# Add a 0.5 seconds after the clock was played
 		core.wait(0.5)
 		return event_time
