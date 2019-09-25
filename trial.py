@@ -33,18 +33,8 @@ class Trial:
 		ticks = self.clock.draw_ticks(win)
 		circle_ball = visual.Circle(win, radius=0.2, fillColor='white', 
 				edges=self.clock.edges, lineWidth=3, units='deg')
-					circle.draw()
 
-		circle.draw()
-		fixation.draw()
-		for tick in ticks:
-			tick.draw()
-
-		dot_x, dot_y = mouse.getPos()
-
-		circle_ball.pos = [0, 0]
-		circle_ball.draw()
-		win.flip()
+		mouse.setPos(newPos=(0,0))
 
 		while True:
 			circle.draw()
